@@ -1,0 +1,15 @@
+{
+  "board": {
+    "length": 7,
+    "height": 5,
+    "matrix": [
+      [false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false],
+      [false, false, true, true, true, false, false],
+      [false, true, true, true, false, false, false],
+      [false, false, false, false, false, false, false]
+    ]
+  },
+  "generations": 1000,
+  "logTimemiliseconds": 300
+}

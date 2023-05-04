@@ -13,7 +13,6 @@ const initialStatePath = argv.config;
 /* @ts-ignore */
 const numGenerations = argv.generations;
 /* @ts-ignore */
-const logTime = process.logTime ? process.logTime : 300;
 
 
 interface GameConfig {
@@ -119,14 +118,21 @@ const logBoard = (board: boolean[][], config: GameConfig) => {
 
 // Run the game for the specified number of generations and log the state of the board at
 // regular intervals
+let intervalId: any = null;
 const runGame = async () => {
-    const config = await loadGameConfig()
+    const config = await loadGameConfig();
+    const generationsNum = config.generations || numGenerations
     let board = config.board.matrix
     logBoard(board, config);
-    const intervalId = setInterval(() => {
+    let count = 0
+    intervalId = setInterval(() => {
         board = updateBoard(board, config);
         logBoard(board, config);
-    }, logTime);
+        count++
+        if (count === generationsNum) {
+            clearInterval(intervalId);
+        }
+    }, config.logTimeMilliseconds);
 }
 
 // Start the game

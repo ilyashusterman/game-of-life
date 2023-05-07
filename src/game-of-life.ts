@@ -27,17 +27,12 @@ interface GameConfig {
 
 const loadGameConfig = async (filename: string = initialStatePath): Promise<GameConfig> => {
     const data = await fs.readFile(filename, 'utf-8');
-    return JSON.parse(data) as GameConfig;
+    let config = JSON.parse(data) as GameConfig;
+    const generationsNum = config.generations || numGenerations
+    config.generations = generationsNum
+    return config
 }
 
-
-const generateBoard = (boardLength: number, boardHeight: number): boolean[][] => {
-    const board: boolean[][] = [];
-    for (let i = 0; i < boardHeight; i++) {
-        board.push(new Array(boardLength).fill(false));
-    }
-    return board;
-}
 // Initialize the board with the Toad Oscillator pattern
 
 
@@ -121,7 +116,6 @@ const logBoard = (board: boolean[][], config: GameConfig) => {
 let intervalId: any = null;
 const runGame = async () => {
     const config = await loadGameConfig();
-    const generationsNum = config.generations || numGenerations
     let board = config.board.matrix
     logBoard(board, config);
     let count = 0
@@ -129,7 +123,7 @@ const runGame = async () => {
         board = updateBoard(board, config);
         logBoard(board, config);
         count++
-        if (count === generationsNum) {
+        if (count === config.generations) {
             clearInterval(intervalId);
         }
     }, config.logTimeMilliseconds);
